@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="page-heading">
+    <h1>Statistics</h1>
+    <p>Summary metrics update automatically from your saved records.</p>
+  </section>
+
+  <section class="stats-grid">
+    <article class="stat">
+      <span>Total Minutes</span>
+      <strong>{{ stats.total_minutes }}</strong>
+    </article>
+    <article class="stat">
+      <span>Sessions</span>
+      <strong>{{ stats.session_count }}</strong>
+    </article>
+    <article class="stat">
+      <span>Average Minutes</span>
+      <strong>{{ stats.average_minutes_per_session }}</strong>
+    </article>
+    <article class="stat">
+      <span>Average Daily</span>
+      <strong>{{ stats.average_daily_minutes }}</strong>
+    </article>
+    <article class="stat">
+      <span>Study Streak</span>
+      <strong>{{ stats.current_streak_days }} days</strong>
+    </article>
+    <article class="stat">
+      <span>Subjects</span>
+      <strong>{{ stats.unique_subject_count }}</strong>
+    </article>
+  </section>
+
+  <section class="panel">
+    <h2>Most Studied Subject</h2>
+    {% if stats.most_studied_subject.subject %}
+      <p>{{ stats.most_studied_subject.subject }}: {{ stats.most_studied_subject.minutes }} minutes</p>
+    {% else %}
+      <p>No study records yet.</p>
+    {% endif %}
+  </section>
+
+  <section class="two-column">
+    <div class="panel">
+      <h2>Daily Totals</h2>
+      {% if stats.daily_totals %}
+        <ul>
+          {% for day, minutes in stats.daily_totals.items() %}
+            <li>{{ day }}: {{ minutes }} minutes</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No daily totals yet.</p>
+      {% endif %}
+    </div>
+
+    <div class="panel">
+      <h2>Weekly Totals</h2>
+      {% if stats.weekly_totals %}
+        <ul>
+          {% for week, minutes in stats.weekly_totals.items() %}
+            <li>{{ week }}: {{ minutes }} minutes</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No weekly totals yet.</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="two-column">
+    <div class="panel">
+      <h2>Monthly Totals</h2>
+      {% if stats.monthly_totals %}
+        <ul>
+          {% for month, minutes in stats.monthly_totals.items() %}
+            <li>{{ month }}: {{ minutes }} minutes</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No monthly totals yet.</p>
+      {% endif %}
+    </div>
+
+    <div class="panel">
+      <h2>Study Range</h2>
+      {% if stats.first_study_date %}
+        <p>First study date: {{ stats.first_study_date }}</p>
+        <p>Latest study date: {{ stats.last_study_date }}</p>
+      {% else %}
+        <p>No study range yet.</p>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}

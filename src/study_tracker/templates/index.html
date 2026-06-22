@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="page-heading">
+    <h1>Study Records</h1>
+    <p>Add each study session once. Your records are stored locally in SQLite.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Add Study Record</h2>
+    <form action="{{ url_for('add') }}" method="post" class="record-form">
+      <label>
+        Subject
+        <input type="text" name="subject" placeholder="Mathematics" required>
+      </label>
+      <label>
+        Minutes studied
+        <input type="number" name="minutes" min="1" required>
+      </label>
+      <label>
+        Date
+        <input type="date" name="study_date" value="{{ today }}" required>
+      </label>
+      <button type="submit">Add Record</button>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h2>Recent Records</h2>
+    {% if records %}
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Subject</th>
+              <th>Minutes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for record in records %}
+              <tr>
+                <td>{{ record.study_date.isoformat() }}</td>
+                <td>{{ record.subject }}</td>
+                <td>{{ record.duration_minutes }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p>No study records yet.</p>
+    {% endif %}
+  </section>
+{% endblock %}

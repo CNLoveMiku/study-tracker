@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.env
+.DS_Store
+data/*.db
+src/study_tracker/static/charts/*.png
+!src/study_tracker/static/charts/.gitkeep
