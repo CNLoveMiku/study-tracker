@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="page-heading">
+    <h1>Intelligent Study Dashboard</h1>
+    <p>A decision-support view that turns study logs into behavior insights.</p>
+  </section>
+
+  <section class="hero-panel">
+    <div>
+      <span class="eyebrow">Weekly Productivity Score</span>
+      <strong>{{ dashboard.productivity.score }}/100</strong>
+      <p>{{ dashboard.productivity.message }}</p>
+    </div>
+    <div class="score-breakdown">
+      <span>Consistency: {{ dashboard.productivity.consistency_score }}</span>
+      <span>Total time: {{ dashboard.productivity.total_time_score }}</span>
+      <span>Balance: {{ dashboard.productivity.balance_score }}</span>
+    </div>
+  </section>
+
+  <section class="stats-grid">
+    <article class="stat">
+      <span>Trend</span>
+      <strong>{{ dashboard.trend.status|title }}</strong>
+    </article>
+    <article class="stat">
+      <span>Balance Score</span>
+      <strong>{{ dashboard.balance.score }}/100</strong>
+    </article>
+    <article class="stat">
+      <span>Best Day</span>
+      <strong>{{ dashboard.best_day.weekday or "No data" }}</strong>
+    </article>
+    <article class="stat">
+      <span>Weak Subject</span>
+      <strong>{{ dashboard.weak_subject.subject or "No data" }}</strong>
+    </article>
+    <article class="stat">
+      <span>Study Streak</span>
+      <strong>{{ stats.current_streak_days }} days</strong>
+    </article>
+    <article class="stat">
+      <span>Total Minutes</span>
+      <strong>{{ stats.total_minutes }}</strong>
+    </article>
+  </section>
+
+  <section class="panel highlight-panel">
+    <h2>Recommendations</h2>
+    <ul class="insight-list">
+      {% for recommendation in dashboard.recommendations %}
+        <li>{{ recommendation }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="two-column">
+    <div class="panel">
+      <h2>Trend Detection</h2>
+      <p>{{ dashboard.trend.message }}</p>
+      <p>Last 7 days: {{ dashboard.trend.last_7_days_minutes }} minutes</p>
+      <p>Previous 7 days: {{ dashboard.trend.previous_7_days_minutes }} minutes</p>
+      <p>Change: {{ dashboard.trend.change_percent }}%</p>
+    </div>
+
+    <div class="panel">
+      <h2>Study Balance</h2>
+      <p>{{ dashboard.balance.message }}</p>
+      {% if dashboard.subject_totals %}
+        <ul>
+          {% for subject, minutes in dashboard.subject_totals.items() %}
+            <li>{{ subject }}: {{ minutes }} minutes</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No subject distribution yet.</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="two-column">
+    <div class="panel">
+      <h2>Best Day Analysis</h2>
+      <p>{{ dashboard.best_day.message }}</p>
+      {% if dashboard.best_day.weekday_totals %}
+        <ul>
+          {% for weekday, minutes in dashboard.best_day.weekday_totals.items() %}
+            <li>{{ weekday }}: {{ minutes }} minutes</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+    <div class="panel">
+      <h2>Weak Subject Analysis</h2>
+      <p>{{ dashboard.weak_subject.message }}</p>
+      {% if dashboard.weak_subject.subject %}
+        <p>Average session: {{ dashboard.weak_subject.average_minutes_per_session }} minutes</p>
+        <p>Total time: {{ dashboard.weak_subject.total_minutes }} minutes</p>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}

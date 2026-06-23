@@ -6,6 +6,7 @@ from pathlib import Path
 
 from flask import Flask, flash, redirect, render_template, request, url_for
 
+from study_tracker.analytics_v2 import intelligent_dashboard
 from study_tracker.analytics import summary_statistics
 from study_tracker.models import (
     DEFAULT_DATABASE_FILE,
@@ -38,6 +39,24 @@ def create_app(database_file: Path | None = None) -> Flask:
     def index():
         records = get_all_records(app.config["DATABASE_FILE"])
         return render_template(
+            "dashboard.html",
+            dashboard=intelligent_dashboard(records),
+            stats=summary_statistics(records),
+        )
+
+    @app.get("/dashboard")
+    def dashboard():
+        records = get_all_records(app.config["DATABASE_FILE"])
+        return render_template(
+            "dashboard.html",
+            dashboard=intelligent_dashboard(records),
+            stats=summary_statistics(records),
+        )
+
+    @app.get("/records")
+    def records():
+        records = get_all_records(app.config["DATABASE_FILE"])
+        return render_template(
             "index.html",
             records=records,
             today=date.today().isoformat(),
@@ -60,7 +79,7 @@ def create_app(database_file: Path | None = None) -> Flask:
             )
         except ValueError as error:
             flash(f"Could not add record: {error}", "error")
-            return redirect(url_for("index"))
+            return redirect(url_for("records"))
 
         try_generate_charts(
             get_all_records(app.config["DATABASE_FILE"]),

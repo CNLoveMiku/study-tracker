@@ -10,6 +10,7 @@ study-tracker/
 │   └── study_tracker/
 │       ├── app.py
 │       ├── analytics.py
+│       ├── analytics_v2.py
 │       ├── charts.py
 │       ├── init_db.py
 │       ├── models.py
@@ -20,6 +21,7 @@ study-tracker/
 │       └── templates/
 │           ├── base.html
 │           ├── charts.html
+│           ├── dashboard.html
 │           ├── index.html
 │           └── statistics.html
 ├── tests/
@@ -32,7 +34,8 @@ study-tracker/
 
 - `src/study_tracker/app.py`: Flask entry point, routes, form handling, redirects, and flash messages.
 - `src/study_tracker/models.py`: SQLite database schema, initialization, safe inserts, and safe queries.
-- `src/study_tracker/analytics.py`: Statistics logic for daily totals, weekly totals, monthly totals, most studied subject, average daily study time, and streaks.
+- `src/study_tracker/analytics.py`: Backward-compatible statistics logic for daily totals, weekly totals, monthly totals, average daily study time, and streaks.
+- `src/study_tracker/analytics_v2.py`: Intelligence layer for productivity score, trend detection, weak subject analysis, best day analysis, balance scoring, and recommendations.
 - `src/study_tracker/charts.py`: Matplotlib chart generation for daily trend, weekly total, and subject distribution.
 - `src/study_tracker/init_db.py`: Command-line database initialization script.
 - `src/study_tracker/templates/`: HTML pages for records, statistics, and charts.
@@ -56,8 +59,13 @@ The project uses a small modular Flask architecture:
 
 - `app.py` owns web routing and user experience.
 - `models.py` owns persistence and hides raw SQL behind functions.
-- `analytics.py` works only with Python records, so it is easy to test.
+- `analytics.py` keeps stable summary statistics for existing views and tests.
+- `analytics_v2.py` turns raw study logs into decision-support signals.
 - `charts.py` turns analytics dictionaries into PNG files.
+
+The dashboard is intentionally rule-based rather than AI-generated. This keeps
+the system explainable: every recommendation can be traced back to study
+consistency, total time, subject balance, trend movement, or weekday behavior.
 
 SQLite is used instead of CSV for the production version because it provides a
 real schema, primary keys, safe parameterized queries, and better long-term

@@ -1,59 +1,77 @@
 # Study Tracker
 
-**Study Tracker** is a Flask + SQLite web application that helps students record
-daily study time, understand their study habits, and turn raw revision logs into
-clear statistics and charts.
+**Study Tracker** is a data-driven Flask + SQLite system that helps students
+analyze and improve study behavior using computational analytics.
 
-I built this project because many students know they are "studying a lot" but do
-not have evidence of where their time goes. Study Tracker solves that by making
-study behavior visible: it records each session, calculates consistency metrics,
-and shows which subjects are receiving the most attention.
+The project started as a simple study-time logger, but it has been upgraded into
+an intelligent study analytics and decision-support dashboard. Instead of only
+recording minutes, it interprets study patterns and recommends what a student
+should adjust next.
 
-![Study Tracker records page](docs/screenshots/records.png)
+![Intelligent Study Dashboard](docs/screenshots/dashboard.png)
+
+## Problem Statement
+
+Students often track homework or revision time informally, but raw logs do not
+answer deeper questions:
+
+- Am I becoming more consistent?
+- Am I over-focusing on one subject?
+- Which subject needs more attention?
+- Which days are my most productive?
+- Is my study pattern improving or declining?
+
+Study Tracker addresses this by converting study records into structured
+analytics, visualizations, and rule-based recommendations.
 
 ## Demo
 
-| Statistics dashboard | Chart dashboard |
-| --- | --- |
-| ![Statistics dashboard](docs/screenshots/statistics.png) | ![Chart dashboard](docs/screenshots/charts.png) |
+| Records | Statistics | Charts |
+| --- | --- | --- |
+| ![Records page](docs/screenshots/records.png) | ![Statistics dashboard](docs/screenshots/statistics.png) | ![Chart dashboard](docs/screenshots/charts.png) |
 
-## What It Does
+## Intelligent Analytics Layer
 
-- Records study sessions with date, subject, and minutes studied
-- Stores records locally in SQLite with a clear schema
-- Shows recent records in a clean table
-- Calculates daily, weekly, and monthly totals
-- Identifies the most studied subject
-- Calculates average daily study time and current study streak
-- Generates interpretation-style insights, not only raw numbers
-- Creates matplotlib PNG charts for trends and subject distribution
+The application includes an `analytics_v2.py` module that calculates:
 
-## Why It Matters
+- **Productivity score** based on weekly consistency, total time, and subject balance
+- **Trend detection** comparing the last 7 days with the previous 7 days
+- **Weak subject analysis** based on the subject with the lowest average logged engagement
+- **Best day analysis** based on total minutes by weekday
+- **Study balance score** using subject distribution balance
+- **Recommendations** generated from deterministic analytics rules
 
-This project is designed as a portfolio-level student productivity tool. It
-demonstrates:
+Example recommendations:
 
-- backend development with Flask
-- database design with SQLite
-- safe parameterized SQL queries
-- data analysis with Python
-- chart generation with matplotlib
-- responsive frontend design with HTML and CSS
+- "Try distributing study more evenly across subjects."
+- "Your consistency is improving; keep the current rhythm."
+- "Give Physics a longer focused session next."
 
-For an IB CAS or Computer Science portfolio, the app shows a complete cycle:
-identify a real student problem, collect data, analyze patterns, and present
-useful feedback through a web interface.
+## System Design
 
-## Data Insights
+```text
+Flask routes
+    |
+    |-- models.py        SQLite schema, validation, safe parameterized queries
+    |-- analytics.py     backward-compatible summary statistics
+    |-- analytics_v2.py  intelligent scoring, trends, balance, recommendations
+    |-- charts.py        matplotlib PNG generation
+    |
+HTML/CSS dashboard views
+```
 
-The statistics page does more than list totals. It explains:
+The system keeps the design simple enough to read, but separates data storage,
+analytics, visualization, and web presentation clearly.
 
-- which subject is receiving the most attention
-- how much time is studied on an average active day
-- whether the student is building a consistent study streak
-- which week had the strongest study performance
+## Features
 
-These insights make the project more useful than a simple time log.
+- Add study records with date, subject, and minutes studied
+- Store data locally in SQLite
+- View recent records in a responsive table
+- See daily, weekly, and monthly study totals
+- Calculate current study streak and average daily study time
+- Use an intelligent dashboard for decision support
+- Generate matplotlib charts for daily trends, weekly totals, and subject distribution
 
 ## Tech Stack
 
@@ -62,6 +80,7 @@ These insights make the project more useful than a simple time log.
 - SQLite
 - matplotlib
 - HTML/CSS
+- pytest
 
 ## Setup
 
@@ -93,6 +112,14 @@ Then open:
 http://127.0.0.1:5000
 ```
 
+## Main Pages
+
+- `/` - intelligent study dashboard
+- `/dashboard` - same decision-support dashboard
+- `/records` - add and view study records
+- `/statistics` - detailed statistical summaries
+- `/charts` - generated matplotlib charts
+
 ## Project Structure
 
 ```text
@@ -105,42 +132,27 @@ study-tracker/
 │   └── screenshots/
 ├── src/
 │   └── study_tracker/
-│       ├── app.py          # Flask routes and app factory
-│       ├── models.py       # SQLite schema and database functions
-│       ├── analytics.py    # Statistics and insight logic
-│       ├── charts.py       # matplotlib chart generation
-│       ├── init_db.py      # Database initialization command
+│       ├── app.py
+│       ├── models.py
+│       ├── analytics.py
+│       ├── analytics_v2.py
+│       ├── charts.py
+│       ├── init_db.py
 │       ├── static/
-│       │   ├── charts/
-│       │   └── styles.css
 │       └── templates/
-│           ├── base.html
-│           ├── index.html
-│           ├── statistics.html
-│           └── charts.html
 └── tests/
 ```
 
-## Database Schema
+## Why This Is Portfolio-Level
 
-```sql
-CREATE TABLE study_records (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    date TEXT NOT NULL,
-    subject TEXT NOT NULL,
-    minutes INTEGER NOT NULL CHECK (minutes > 0)
-);
-```
+This project demonstrates a full applied CS workflow:
 
-## Routes
+1. Define a real student productivity problem.
+2. Design a database-backed web system.
+3. Collect structured data.
+4. Apply computational analytics.
+5. Generate interpretable recommendations.
+6. Present insights through a clean dashboard.
 
-- `/` - add records and view recent study sessions
-- `/statistics` - view totals, streaks, averages, and insights
-- `/charts` - view generated matplotlib charts
-
-## Future Improvements
-
-- Add user accounts for multiple students
-- Export records to CSV
-- Add goal tracking by subject
-- Add filters by date range
+It is intentionally scoped: the goal is not to add many features, but to show
+clear data modeling, algorithmic thinking, and useful decision support.

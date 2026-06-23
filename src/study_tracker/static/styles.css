@@ -63,6 +63,44 @@ main {
   padding: 20px;
 }
 
+.hero-panel {
+  align-items: center;
+  background: #111827;
+  border-radius: 8px;
+  color: #ffffff;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 2fr 1fr;
+  margin-bottom: 20px;
+  padding: 24px;
+}
+
+.hero-panel strong {
+  display: block;
+  font-size: 48px;
+  line-height: 1;
+  margin: 10px 0;
+}
+
+.eyebrow {
+  color: #bfdbfe;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.score-breakdown {
+  display: grid;
+  gap: 10px;
+}
+
+.score-breakdown span {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 10px;
+}
+
 .highlight-panel {
   border-left: 4px solid #2563eb;
 }
@@ -176,6 +214,7 @@ td {
   }
 
   .record-form,
+  .hero-panel,
   .stats-grid,
   .two-column {
     grid-template-columns: 1fr;

@@ -74,7 +74,12 @@ def test_study_insights_returns_interpretation_text():
 
 
 def test_summary_statistics():
-    assert summary_statistics(sample_records()) == {
+    stats = summary_statistics(sample_records())
+    advanced = stats.pop("advanced")
+
+    assert advanced["productivity"]["score"] > 0
+    assert advanced["trend"]["status"] in {"improving", "stable", "declining"}
+    assert stats == {
         "total_minutes": 225,
         "session_count": 4,
         "average_minutes_per_session": 56.25,
@@ -113,7 +118,14 @@ def test_summary_statistics():
 
 
 def test_summary_statistics_for_empty_records():
-    assert summary_statistics([]) == {
+    stats = summary_statistics([])
+    advanced = stats.pop("advanced")
+
+    assert advanced["productivity"]["score"] == 0
+    assert advanced["recommendations"] == [
+        "Start by logging one week of study sessions to unlock guidance."
+    ]
+    assert stats == {
         "total_minutes": 0,
         "session_count": 0,
         "average_minutes_per_session": 0,

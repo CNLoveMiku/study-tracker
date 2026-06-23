@@ -9,6 +9,16 @@ def test_home_page_loads(tmp_path):
     response = app.test_client().get("/")
 
     assert response.status_code == 200
+    assert b"Intelligent Study Dashboard" in response.data
+
+
+def test_records_page_loads(tmp_path):
+    app = create_app(tmp_path / "study_tracker.db")
+    app.config.update(TESTING=True)
+
+    response = app.test_client().get("/records")
+
+    assert response.status_code == 200
     assert b"Add Study Record" in response.data
 
 
@@ -48,4 +58,5 @@ def test_add_record_rejects_invalid_minutes(tmp_path):
     )
 
     assert response.status_code == 302
+    assert response.headers["Location"] == "/records"
     assert get_all_records(database_file) == []

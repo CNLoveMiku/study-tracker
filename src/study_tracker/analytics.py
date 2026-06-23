@@ -52,15 +52,21 @@ def monthly_total_study_time(records: list[StudySession]) -> dict[str, int]:
 
 def most_studied_subject(records: list[StudySession]) -> dict[str, int | str | None]:
     """Return the subject with the highest total study time."""
-    totals: defaultdict[str, int] = defaultdict(int)
-    for record in records:
-        totals[record.subject] += record.duration_minutes
+    totals = total_study_time_by_subject(records)
 
     if not totals:
         return {"subject": None, "minutes": 0}
 
     subject, minutes = max(totals.items(), key=lambda item: (item[1], item[0]))
     return {"subject": subject, "minutes": minutes}
+
+
+def total_study_time_by_subject(records: list[StudySession]) -> dict[str, int]:
+    """Return total minutes studied for each subject."""
+    totals: defaultdict[str, int] = defaultdict(int)
+    for record in records:
+        totals[record.subject] += record.duration_minutes
+    return dict(sorted(totals.items()))
 
 
 def average_daily_study_time(records: list[StudySession]) -> float:
@@ -138,6 +144,8 @@ def study_insights(records: list[StudySession]) -> list[str]:
 
 def summary_statistics(records: list[StudySession]) -> AnalyticsResult:
     """Return structured statistics for templates or JSON APIs."""
+    from study_tracker.analytics_v2 import intelligent_dashboard
+
     total_minutes = sum(record.duration_minutes for record in records)
     session_count = len(records)
     unique_subjects = sorted({record.subject for record in records})
@@ -162,4 +170,5 @@ def summary_statistics(records: list[StudySession]) -> AnalyticsResult:
         "monthly_totals": monthly_total_study_time(records),
         "most_studied_subject": most_studied_subject(records),
         "insights": study_insights(records),
+        "advanced": intelligent_dashboard(records),
     }
