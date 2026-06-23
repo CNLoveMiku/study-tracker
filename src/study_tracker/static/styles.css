@@ -63,6 +63,18 @@ main {
   padding: 20px;
 }
 
+.highlight-panel {
+  border-left: 4px solid #2563eb;
+}
+
+.insight-list {
+  margin-bottom: 0;
+}
+
+.insight-list li {
+  margin: 10px 0;
+}
+
 .record-form,
 .stats-grid,
 .two-column {

@@ -85,6 +85,57 @@ def current_streak_days(records: list[StudySession]) -> int:
     return streak
 
 
+def study_insights(records: list[StudySession]) -> list[str]:
+    """Convert raw study metrics into short, student-friendly interpretations."""
+    if not records:
+        return [
+            "Add your first study record to unlock personalized study insights.",
+        ]
+
+    stats = {
+        "daily_totals": total_study_time_per_day(records),
+        "weekly_totals": weekly_total_study_time(records),
+        "monthly_totals": monthly_total_study_time(records),
+        "most_studied_subject": most_studied_subject(records),
+        "average_daily_minutes": average_daily_study_time(records),
+        "current_streak_days": current_streak_days(records),
+    }
+    insights: list[str] = []
+
+    strongest_subject = stats["most_studied_subject"]
+    if strongest_subject["subject"]:
+        insights.append(
+            f"You spend the most time on {strongest_subject['subject']} "
+            f"({strongest_subject['minutes']} minutes), which shows your main "
+            "academic focus."
+        )
+
+    insights.append(
+        f"On active study days, you average {stats['average_daily_minutes']} "
+        "minutes of study time."
+    )
+
+    streak = stats["current_streak_days"]
+    if streak > 1:
+        insights.append(
+            f"Your current streak is {streak} days, showing consistent daily effort."
+        )
+    else:
+        insights.append(
+            "Your streak is currently one day or less; studying on consecutive days "
+            "would improve consistency."
+        )
+
+    weekly_totals = stats["weekly_totals"]
+    if weekly_totals:
+        best_week, best_minutes = max(weekly_totals.items(), key=lambda item: item[1])
+        insights.append(
+            f"Your strongest week was {best_week} with {best_minutes} minutes studied."
+        )
+
+    return insights
+
+
 def summary_statistics(records: list[StudySession]) -> AnalyticsResult:
     """Return structured statistics for templates or JSON APIs."""
     total_minutes = sum(record.duration_minutes for record in records)
@@ -110,4 +161,5 @@ def summary_statistics(records: list[StudySession]) -> AnalyticsResult:
         "weekly_totals": weekly_total_study_time(records),
         "monthly_totals": monthly_total_study_time(records),
         "most_studied_subject": most_studied_subject(records),
+        "insights": study_insights(records),
     }

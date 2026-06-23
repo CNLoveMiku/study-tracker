@@ -42,6 +42,15 @@
     {% endif %}
   </section>
 
+  <section class="panel highlight-panel">
+    <h2>Key Insights</h2>
+    <ul class="insight-list">
+      {% for insight in stats.insights %}
+        <li>{{ insight }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+
   <section class="two-column">
     <div class="panel">
       <h2>Daily Totals</h2>

@@ -8,6 +8,7 @@ from study_tracker.analytics import (
     summary_statistics,
     total_study_time_per_day,
     weekly_total_study_time,
+    study_insights,
 )
 from study_tracker.models import StudySession
 
@@ -65,6 +66,13 @@ def test_current_streak_days_ends_on_latest_study_date():
     assert current_streak_days(records) == 3
 
 
+def test_study_insights_returns_interpretation_text():
+    insights = study_insights(sample_records())
+
+    assert any("Science" in insight for insight in insights)
+    assert any("average" in insight for insight in insights)
+
+
 def test_summary_statistics():
     assert summary_statistics(sample_records()) == {
         "total_minutes": 225,
@@ -93,6 +101,14 @@ def test_summary_statistics():
             "subject": "Science",
             "minutes": 90,
         },
+        "insights": [
+            "You spend the most time on Science (90 minutes), which shows your main "
+            "academic focus.",
+            "On active study days, you average 75 minutes of study time.",
+            "Your streak is currently one day or less; studying on consecutive days "
+            "would improve consistency.",
+            "Your strongest week was 2026-W26 with 135 minutes studied.",
+        ],
     }
 
 
@@ -114,4 +130,7 @@ def test_summary_statistics_for_empty_records():
             "subject": None,
             "minutes": 0,
         },
+        "insights": [
+            "Add your first study record to unlock personalized study insights.",
+        ],
     }
