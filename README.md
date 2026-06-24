@@ -1,110 +1,100 @@
-# Study Tracker V3: AI Study Analytics System
+# Study Tracker: Data-Driven Study Behavior Analytics System
 
-Study Tracker V3 is a Flask + SQLite web application that helps students
-understand and improve study behavior through computational analytics. The
-project has evolved from a study logging tool into an AI-style decision-support
-system that converts daily study records into scores, trends, behavioral
-patterns, and practical recommendations.
+Study Tracker is a Flask-based analytics application that helps students
+understand and improve learning efficiency. Rather than functioning only as a
+time tracker, the system collects study records, analyzes behavioral patterns,
+and presents actionable insights through a web dashboard.
 
-![AI Study Analytics Dashboard](docs/screenshots/dashboard.png)
+![Study analytics dashboard](docs/screenshots/dashboard.png)
 
 ## Problem Statement
 
-Students often know how long they studied, but they do not always know whether
-their study behavior is healthy, balanced, or improving. A raw list of study
-sessions does not clearly answer questions such as:
+Many students record how long they study, but time tracking alone does not
+explain whether their learning habits are effective. A student may spend many
+hours studying while still showing inconsistent routines, uneven subject
+coverage, or declining weekly progress.
 
-- Is my weekly study consistency improving or declining?
-- Am I over-focusing on one subject while ignoring another?
-- Which subject appears weakest based on logged engagement?
-- Is my study distribution balanced across subjects?
-- What should I adjust next week?
+The core problem is that raw study logs do not automatically reveal study
+efficiency. Students need a system that can interpret their data, detect
+patterns, and translate those patterns into clear feedback about consistency,
+focus, and balance.
 
-Study Tracker V3 addresses this problem by transforming study logs into
-interpretable analytics and recommendation messages.
+## Solution
 
-## Why This Project Exists
+Study Tracker addresses this problem as a data-driven study behavior analytics
+system. The application collects structured study records, stores them in a
+local SQLite database, processes them through analytics modules, and displays
+results through a clean Flask dashboard.
 
-This project demonstrates how a small, well-scoped software system can support
-student decision-making. Instead of adding many unrelated features, it focuses
-on a clear academic productivity problem: helping a student reflect on study
-behavior using structured data, algorithms, visualizations, and a clean web
-interface.
-
-The result is suitable for an IB CAS portfolio, a Computer Science project, or
-a university application portfolio because it shows database design, backend
-engineering, data analysis, visualization, testing, and user-centered product
-thinking in one coherent system.
-
-## System Architecture
-
-```text
-Flask web application
-    |
-    |-- app.py              Routes, form handling, flash messages, redirects
-    |-- models.py           SQLite schema, validation, safe parameterized queries
-    |-- analytics.py        Basic statistics and backward-compatible summaries
-    |-- study_insights.py   V3 insight engine and recommendation logic
-    |-- analytics_v2.py     Compatibility facade for older V2 imports
-    |-- charts.py           Matplotlib chart generation saved to static/charts/
-    |
-HTML templates + CSS
-    |
-SQLite local database
-```
+The system follows a simple pipeline: data collection through a web form,
+persistent storage in SQLite, analytics processing in Python, insight generation
+through a rule-based insight engine, and dashboard visualization using HTML/CSS
+and Matplotlib-generated charts. This turns individual study sessions into a
+decision-support tool for improving learning habits.
 
 ## Key Features
 
-- Add study records with subject, duration, and date
-- Store records locally in SQLite with a defined schema
-- Validate form input before database insertion
-- View recent records in a responsive table
-- Calculate daily, weekly, and monthly study totals
-- Calculate average daily study time and current streak
-- Generate charts for daily trends, weekly totals, and subject distribution
-- Display a dashboard with productivity score, trends, balance, weak areas, and recommendations
+Study Tracker includes a Flask web app for adding and reviewing study records,
+a SQLite database layer for reliable local persistence, and a study analytics
+system for daily, weekly, and monthly summaries. The project also includes an
+insight engine that produces productivity scoring, trend detection, weak area
+analysis, and behavioral feedback.
 
-## Insight Engine
+The dashboard presents metrics in a structured interface, while the charts page
+uses Matplotlib to visualize daily study trends, weekly totals, and subject
+distribution. Together, these features make the project more than a logging
+tool: it becomes a student-facing analytics system.
 
-The V3 insight engine lives in `src/study_tracker/study_insights.py`. It is
-rule-based and explainable, which makes the output easy to understand and
-debug.
+## System Architecture
 
-The engine calculates:
+The project is organized into focused modules so that data handling, analytics,
+visualization, and web presentation remain separate.
 
-- **Productivity Score**: a 0-100 score based on weekly consistency, total study
-  time, and subject distribution balance.
-- **Trend Analysis**: compares the latest 7 days with the previous 7 days and
-  classifies behavior as improving, stable, or declining.
-- **Weak Area Detection**: identifies the least productive subject based on
-  logged engagement and average session length.
-- **Behavioral Pattern Analysis**: detects imbalanced study distribution and
-  over-focus on one subject.
-- **Weekly Insight Report**: returns a structured dictionary used by the
-  dashboard to display metrics and recommendation messages.
+```text
+study-tracker/
+├── app.py                         Project entry point
+├── src/study_tracker/
+│   ├── app.py                     Flask routes and web application setup
+│   ├── models.py                  SQLite database schema and query layer
+│   ├── analytics.py               Core statistical summaries
+│   ├── study_insights.py          Advanced insight engine
+│   ├── charts.py                  Matplotlib chart generation
+│   ├── templates/                 HTML pages
+│   └── static/                    CSS and generated chart images
+└── tests/                         Automated test suite
+```
 
-Example recommendation messages:
+`app.py` connects the web interface to the backend modules. `models.py` defines
+the database layer, including validation and parameterized SQLite queries.
+`analytics.py` calculates basic statistics such as totals, averages, and
+streaks. `study_insights.py` contains the higher-level behavior analysis used
+by the dashboard. `charts.py` generates PNG visualizations for study trends and
+subject distribution.
 
-- "Your study pattern is imbalanced."
-- "You are improving consistently; keep the current rhythm."
-- "Consider redistributing study time across subjects."
+## Insights
 
-## Demo Screens
+The insight engine is designed to make study data interpretable. It calculates
+a productivity score from weekly study time, consistency, and subject balance,
+then normalizes the result to a 0-100 scale.
 
-| Records | Statistics | Charts |
-| --- | --- | --- |
-| ![Records page](docs/screenshots/records.png) | ![Statistics dashboard](docs/screenshots/statistics.png) | ![Chart dashboard](docs/screenshots/charts.png) |
+Trend detection compares the latest seven days with the previous seven days and
+classifies the student's behavior as improving, stable, or declining. Weak
+subject analysis identifies the subject with the lowest logged engagement,
+helping the student notice areas that may require more deliberate attention.
+
+Behavioral analysis detects imbalance in subject distribution and highlights
+over-focus when one subject receives a disproportionate amount of study time.
+These outputs are combined into recommendation messages that help students
+decide how to adjust their next study week.
 
 ## Tech Stack
 
-- Python
-- Flask
-- SQLite
-- matplotlib
-- HTML/CSS
-- pytest
+The application is built with Python, Flask, SQLite, and Matplotlib. Flask
+provides the web interface, SQLite provides local structured storage, and
+Matplotlib generates visual summaries. The project also uses HTML/CSS for the
+frontend and pytest for automated testing.
 
-## Run Locally
+## Running the Project
 
 ```bash
 python -m venv .venv
@@ -119,49 +109,17 @@ Then open:
 http://127.0.0.1:5000
 ```
 
-SQLite is included with Python, so it does not need to be installed with pip.
-
-## Main Routes
-
-- `/` - AI study analytics dashboard
-- `/dashboard` - same decision-support dashboard
-- `/records` - add and view study records
-- `/statistics` - detailed statistical summaries
-- `/charts` - generated matplotlib charts
-
-## Project Structure
-
-```text
-study-tracker/
-├── app.py
-├── requirements.txt
-├── README.md
-├── ARCHITECTURE.md
-├── docs/
-│   └── screenshots/
-├── src/
-│   └── study_tracker/
-│       ├── app.py
-│       ├── models.py
-│       ├── analytics.py
-│       ├── study_insights.py
-│       ├── analytics_v2.py
-│       ├── charts.py
-│       ├── init_db.py
-│       ├── static/
-│       └── templates/
-└── tests/
-```
+SQLite is included with Python, so no separate SQLite package is required.
 
 ## Learning Outcomes
 
-This project demonstrates:
+This project demonstrates backend development through Flask routing, form
+handling, validation, and SQLite persistence. It demonstrates data analysis
+through summary statistics, productivity scoring, trend classification, and
+behavioral pattern detection.
 
-- Modular Flask application design
-- SQLite schema design and safe SQL queries
-- Input validation and error handling
-- Separation of persistence, analytics, visualization, and presentation layers
-- Algorithmic thinking through scoring, trend classification, and balance analysis
-- Matplotlib chart generation for web applications
-- Automated testing with pytest
-- Documentation and release management for a portfolio-ready project
+It also reflects system design and product thinking: the application separates
+concerns across modules, turns raw data into user-facing insights, and focuses
+on a real student problem rather than adding unnecessary features. The result is
+a compact but complete portfolio project showing how software can support
+learning decisions through structured data and interpretable analytics.
