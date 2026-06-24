@@ -2,8 +2,8 @@
 
 {% block content %}
   <section class="page-heading">
-    <h1>Intelligent Study Dashboard</h1>
-    <p>A decision-support view that turns study logs into behavior insights.</p>
+    <h1>AI Study Analytics Dashboard</h1>
+    <p>A decision-support view that turns study logs into behavioral insights.</p>
   </section>
 
   <section class="hero-panel">
@@ -33,8 +33,12 @@
       <strong>{{ dashboard.best_day.weekday or "No data" }}</strong>
     </article>
     <article class="stat">
-      <span>Weak Subject</span>
-      <strong>{{ dashboard.weak_subject.subject or "No data" }}</strong>
+      <span>Best Subject</span>
+      <strong>{{ dashboard.best_subject.subject or "No data" }}</strong>
+    </article>
+    <article class="stat">
+      <span>Worst Subject</span>
+      <strong>{{ dashboard.worst_subject.subject or "No data" }}</strong>
     </article>
     <article class="stat">
       <span>Study Streak</span>
@@ -47,7 +51,8 @@
   </section>
 
   <section class="panel highlight-panel">
-    <h2>Recommendations</h2>
+    <h2>AI-Style Recommendation</h2>
+    <p class="recommendation">{{ dashboard.recommendation }}</p>
     <ul class="insight-list">
       {% for recommendation in dashboard.recommendations %}
         <li>{{ recommendation }}</li>
@@ -65,8 +70,12 @@
     </div>
 
     <div class="panel">
-      <h2>Study Balance</h2>
+      <h2>Behavioral Pattern Analysis</h2>
+      <p>{{ dashboard.behavioral_patterns.message }}</p>
       <p>{{ dashboard.balance.message }}</p>
+      {% if dashboard.behavioral_patterns.over_focus %}
+        <p>Over-focus detected: {{ dashboard.behavioral_patterns.dominant_subject }} receives {{ dashboard.behavioral_patterns.dominant_share }}% of study time.</p>
+      {% endif %}
       {% if dashboard.subject_totals %}
         <ul>
           {% for subject, minutes in dashboard.subject_totals.items() %}
@@ -93,11 +102,11 @@
     </div>
 
     <div class="panel">
-      <h2>Weak Subject Analysis</h2>
-      <p>{{ dashboard.weak_subject.message }}</p>
-      {% if dashboard.weak_subject.subject %}
-        <p>Average session: {{ dashboard.weak_subject.average_minutes_per_session }} minutes</p>
-        <p>Total time: {{ dashboard.weak_subject.total_minutes }} minutes</p>
+      <h2>Weak Area Detection</h2>
+      <p>{{ dashboard.worst_subject.message }}</p>
+      {% if dashboard.worst_subject.subject %}
+        <p>Average session: {{ dashboard.worst_subject.average_minutes_per_session }} minutes</p>
+        <p>Total time: {{ dashboard.worst_subject.total_minutes }} minutes</p>
       {% endif %}
     </div>
   </section>

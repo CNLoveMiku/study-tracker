@@ -6,8 +6,8 @@ from pathlib import Path
 
 from flask import Flask, flash, redirect, render_template, request, url_for
 
-from study_tracker.analytics_v2 import intelligent_dashboard
 from study_tracker.analytics import summary_statistics
+from study_tracker.study_insights import weekly_insight_report
 from study_tracker.models import (
     DEFAULT_DATABASE_FILE,
     add_study_record,
@@ -40,7 +40,7 @@ def create_app(database_file: Path | None = None) -> Flask:
         records = get_all_records(app.config["DATABASE_FILE"])
         return render_template(
             "dashboard.html",
-            dashboard=intelligent_dashboard(records),
+            dashboard=weekly_insight_report(records),
             stats=summary_statistics(records),
         )
 
@@ -49,7 +49,7 @@ def create_app(database_file: Path | None = None) -> Flask:
         records = get_all_records(app.config["DATABASE_FILE"])
         return render_template(
             "dashboard.html",
-            dashboard=intelligent_dashboard(records),
+            dashboard=weekly_insight_report(records),
             stats=summary_statistics(records),
         )
 

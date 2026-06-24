@@ -9,7 +9,7 @@ def test_home_page_loads(tmp_path):
     response = app.test_client().get("/")
 
     assert response.status_code == 200
-    assert b"Intelligent Study Dashboard" in response.data
+    assert b"AI Study Analytics Dashboard" in response.data
 
 
 def test_records_page_loads(tmp_path):

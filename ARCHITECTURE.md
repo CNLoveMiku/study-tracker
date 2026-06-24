@@ -11,6 +11,7 @@ study-tracker/
 │       ├── app.py
 │       ├── analytics.py
 │       ├── analytics_v2.py
+│       ├── study_insights.py
 │       ├── charts.py
 │       ├── init_db.py
 │       ├── models.py
@@ -34,8 +35,9 @@ study-tracker/
 
 - `src/study_tracker/app.py`: Flask entry point, routes, form handling, redirects, and flash messages.
 - `src/study_tracker/models.py`: SQLite database schema, initialization, safe inserts, and safe queries.
-- `src/study_tracker/analytics.py`: Backward-compatible statistics logic for daily totals, weekly totals, monthly totals, average daily study time, and streaks.
-- `src/study_tracker/analytics_v2.py`: Intelligence layer for productivity score, trend detection, weak subject analysis, best day analysis, balance scoring, and recommendations.
+- `src/study_tracker/analytics.py`: Basic statistics logic for daily totals, weekly totals, monthly totals, average daily study time, and streaks.
+- `src/study_tracker/study_insights.py`: V3 insight engine for productivity scoring, trend analysis, weak area detection, behavioral pattern analysis, balance scoring, and recommendations.
+- `src/study_tracker/analytics_v2.py`: Compatibility facade that preserves older V2 imports while delegating advanced analytics to `study_insights.py`.
 - `src/study_tracker/charts.py`: Matplotlib chart generation for daily trend, weekly total, and subject distribution.
 - `src/study_tracker/init_db.py`: Command-line database initialization script.
 - `src/study_tracker/templates/`: HTML pages for records, statistics, and charts.
@@ -60,7 +62,7 @@ The project uses a small modular Flask architecture:
 - `app.py` owns web routing and user experience.
 - `models.py` owns persistence and hides raw SQL behind functions.
 - `analytics.py` keeps stable summary statistics for existing views and tests.
-- `analytics_v2.py` turns raw study logs into decision-support signals.
+- `study_insights.py` turns raw study logs into decision-support signals.
 - `charts.py` turns analytics dictionaries into PNG files.
 
 The dashboard is intentionally rule-based rather than AI-generated. This keeps

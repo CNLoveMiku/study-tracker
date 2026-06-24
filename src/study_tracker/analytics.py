@@ -144,7 +144,7 @@ def study_insights(records: list[StudySession]) -> list[str]:
 
 def summary_statistics(records: list[StudySession]) -> AnalyticsResult:
     """Return structured statistics for templates or JSON APIs."""
-    from study_tracker.analytics_v2 import intelligent_dashboard
+    from study_tracker.study_insights import weekly_insight_report
 
     total_minutes = sum(record.duration_minutes for record in records)
     session_count = len(records)
@@ -170,5 +170,5 @@ def summary_statistics(records: list[StudySession]) -> AnalyticsResult:
         "monthly_totals": monthly_total_study_time(records),
         "most_studied_subject": most_studied_subject(records),
         "insights": study_insights(records),
-        "advanced": intelligent_dashboard(records),
+        "advanced": weekly_insight_report(records),
     }
